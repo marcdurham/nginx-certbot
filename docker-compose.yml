@@ -15,6 +15,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "8200:8200"
+    links:
+      - vault
     command: /bin/sh -c "
         if [ -s /data/fullchain.pem ] ;
         then echo 'Certificate exists, no need to create a self-signed certificate.' ;
@@ -47,6 +50,8 @@ services:
       - ./data:/data
       - ./data/certbot/etc/letsencrypt:/etc/letsencrypt
       - ./data/shared/var/www/static:/var/www/static
+    depends_on: 
+      - nginx
     entrypoint: /bin/sh -c "
         while :; 
         do 
@@ -63,3 +68,15 @@ services:
           sleep 12h ;
         done
       "
+  vault:
+    image: vault
+    container_name: vault
+    restart: always
+    volumes:
+      - ./data/vault/certs:/vault/certs
+      - ./data/vault/logs:/vault/logs
+      - ./data/vault/file:/vault/file
+      - ./data/vault/config:/vault/config
+    cap_add:
+      - IPC_LOCK
+    entrypoint: vault server -config=/vault/config/vault.json
