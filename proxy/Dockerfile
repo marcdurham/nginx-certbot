@@ -1,2 +1,2 @@
-FROM nginx:1.15-alpine
+FROM nginx
 RUN apt-get update && apt-get install -y openssl
