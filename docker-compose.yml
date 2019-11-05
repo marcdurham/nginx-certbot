@@ -18,7 +18,7 @@ services:
       - "8200:8200"
     links:
       - vault
-    entrypoint: /bin/sh -c /data/nginx.entrypoint.sh
+    entrypoint: /bin/sh -c 'chmod +x /data/nginx.entrypoint.sh && /data/nginx.entrypoint.sh'
   certbot:
     container_name: cerbot
     image: certbot/certbot
@@ -29,7 +29,7 @@ services:
       - ./data/shared/var/www/static:/var/www/static
     depends_on: 
       - nginx
-    entrypoint: /bin/sh -c /data/certbot.entrypoint.sh
+    entrypoint: /bin/sh -c 'chmod +x /data/certbot.entrypoint.sh && /data/certbot.entrypoint.sh'
   vault:
     image: vault
     container_name: vault
