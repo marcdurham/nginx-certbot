@@ -1,2 +1,5 @@
 /data/certbot
 .env
+data/certbot_certificates_copied.txt
+data/fullchain.pem
+data/privkey.pem
