@@ -1,5 +1,6 @@
 #!/bin/bash
 
+envsubst < /data/nginx.secure.conf > /data/nginx.conf ;
 if [ -s /data/fullchain.pem ] ;
 then echo 'Certificate exists, no need to create a self-signed certificate.' ;
 else echo 'No certificate found.  Generating temporary self signed certifcate...' ;
@@ -9,7 +10,7 @@ echo 'Starting NGINX and reload loops...' ;
 while :; 
 do sleep 4 & wait $${!}; 
 echo 'Waiting for certificate copy file from cerbot...' ;
-    nginx -s reload -c /data/nginx.secure.conf ;
+    nginx -s reload -c /data/nginx.conf ;
     if [ -s /data/certbot_certificates_copied.txt ]; 
     then echo 'Certificate copy file detected, stop checking...' ; 
     break ; 
@@ -19,6 +20,6 @@ done
 && while :; 
 do sleep 6h & wait $${!}; 
     echo 'Reloading configuration files...' ;
-    nginx -s reload -c /data/nginx.secure.conf ; 
+    nginx -s reload -c /data/nginx.conf ; 
     echo 'Sleeping for 6 hours...' ;
-done & nginx -c /data/nginx.secure.conf -g 'daemon off;'  
+done & nginx -c /data/nginx.conf -g 'daemon off;'  
