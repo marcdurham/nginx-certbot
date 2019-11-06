@@ -5,7 +5,8 @@ services:
     container_name: nginx
     restart: unless-stopped
     volumes:
-      - ./data:/data    
+      - ./app-nginx:/app
+      - ./data:/data
       - ./data/nginx/etc/nginx:/etc/nginx
       - ./data/certbot/etc/letsencrypt:/etc/letsencrypt
       - ./data/shared/var/www/static:/var/www/static
@@ -18,11 +19,14 @@ services:
       - "8200:8200"
     links:
       - vault
-    entrypoint: /bin/sh -c /data/nginx.entrypoint.sh
+    environment:
+      - domain=$domain
+      - certbot_email=$certbot_email
   certbot:
     container_name: cerbot
     restart: unless-stopped
     volumes:
+      - ./app-cerbot:/app
       - ./data:/data
       - ./data/certbot/etc/letsencrypt:/etc/letsencrypt
       - ./data/shared/var/www/static:/var/www/static
@@ -31,7 +35,9 @@ services:
       dockerfile: certbot/Dockerfile      
     depends_on: 
       - nginx
-    entrypoint: /bin/sh -c /data/certbot.entrypoint.sh
+    environment:
+      - domain=$domain
+      - certbot_email=$certbot_email      
   vault:
     image: vault
     container_name: vault

@@ -8,7 +8,7 @@ else echo 'No certificate found.  Generating temporary self signed certifcate...
 fi ;
 echo 'Starting NGINX and reload loops...' ;
 while :; 
-do sleep 4 & wait $${!}; 
+do sleep 4 & wait ${!}; 
 echo 'Waiting for certificate copy file from cerbot...' ;
     nginx -s reload -c /data/nginx.conf ;
     if [ -s /data/certbot_certificates_copied.txt ]; 
@@ -18,7 +18,7 @@ echo 'Waiting for certificate copy file from cerbot...' ;
 done 
 && echo 'Starting 6 hour configuration reload loop...' 
 && while :; 
-do sleep 6h & wait $${!}; 
+do sleep 6h & wait ${!}; 
     echo 'Reloading configuration files...' ;
     nginx -s reload -c /data/nginx.conf ; 
     echo 'Sleeping for 6 hours...' ;
